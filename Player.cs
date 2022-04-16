@@ -8,7 +8,6 @@ namespace test
         public int haveBall = 0;
         public int team = 0;
         public List<int> jogador = new List<int>();
-
         public int[] position = new int[] { 0, 0 };
         // public List<List<int>>  position = new List<List<int>>();
         // public List<int> position = new List<int>();

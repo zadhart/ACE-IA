@@ -38,7 +38,7 @@ namespace test
         // single source shortest path algorithm
         // for a graph represented using adjacency
         // matrix representation
-        void dijkstra(int[,] graph, int src)
+        public void dijkstra(Graph graph, Player src)
         {
             int[] dist = new int[V]; // The output array. dist[i]
                                      // will hold the shortest
