@@ -2,94 +2,73 @@ namespace test
 {
     public class Dijkstra
     {
-        // A utility function to find the
-        // vertex with minimum distance
-        // value, from the set of vertices
-        // not yet included in shortest
-        // path tree
-        static int V = 9;
-        int minDistance(int[] dist,
-                        bool[] sptSet)
+        int minDistance(double[] dist, bool[] sptSet, Graph grafo, int u)
         {
-            // Initialize min value
-            int min = int.MaxValue, min_index = -1;
+            double min = double.MaxValue;
+            int min_index = -1;
 
-            for (int v = 0; v < V; v++)
+            foreach(int v in grafo.neighbors[u]){
+                // Console.WriteLine("Vizinhos: " + v);
                 if (sptSet[v] == false && dist[v] <= min)
                 {
                     min = dist[v];
                     min_index = v;
                 }
-
+            }
+            // Console.WriteLine("Min Index aqui: " + min_index);
             return min_index;
         }
-
-        // A utility function to print
-        // the constructed distance array
-        void printSolution(int[] dist, int n)
+        void printSolution(double[] dist, Graph grafo, List <int> caminho, Player src, Player destino)
         {
             Console.Write("Vertex     Distance "
                           + "from Source\n");
-            for (int i = 0; i < V; i++)
+            for (int i = 0; i < grafo.allNodesData.Count; i++)
+            {
                 Console.Write(i + " \t\t " + dist[i] + "\n");
+            }
+
+            Console.WriteLine("Caminho: ");
+            Console.Write(src.numero);
+            foreach(var v in caminho)
+            {
+                Console.Write( " " + v);
+            }
+            Console.Write(" " + destino.numero);
+
         }
-
-        // Function that implements Dijkstra's
-        // single source shortest path algorithm
-        // for a graph represented using adjacency
-        // matrix representation
-        public void dijkstra(Graph graph, Player src)
+        public void dijkstra(Graph grafo, Player src, Player destino)
         {
-            int[] dist = new int[V]; // The output array. dist[i]
-                                     // will hold the shortest
-                                     // distance from src to i
+            double[] dist = new double[grafo.allNodesData.Count];
+            List<int> caminho = new List<int>();
+            bool[] visitado = new bool[grafo.allNodesData.Count];
 
-            // sptSet[i] will true if vertex
-            // i is included in shortest path
-            // tree or shortest distance from
-            // src to i is finalized
-            bool[] sptSet = new bool[V];
-
-            // Initialize all distances as
-            // INFINITE and stpSet[] as false
-            for (int i = 0; i < V; i++)
+            for (int i = 0; i < grafo.allNodesData.Count; i++)
             {
-                dist[i] = int.MaxValue;
-                sptSet[i] = false;
+                dist[i] = double.MaxValue;
+                visitado[i] = false;
             }
 
-            // Distance of source vertex
-            // from itself is always 0
-            dist[src] = 0;
+            dist[src.numero] = 0;
 
-            // Find shortest path for all vertices
-            for (int count = 0; count < V - 1; count++)
+            for (int count = 0; count < grafo.allNodesData.Count; count++)
             {
-                // Pick the minimum distance vertex
-                // from the set of vertices not yet
-                // processed. u is always equal to
-                // src in first iteration.
-                int u = minDistance(dist, sptSet);
-
-                // Mark the picked vertex as processed
-                sptSet[u] = true;
-
-                // Update dist value of the adjacent
-                // vertices of the picked vertex.
-                for (int v = 0; v < V; v++)
-
-                    // Update dist[v] only if is not in
-                    // sptSet, there is an edge from u
-                    // to v, and total weight of path
-                    // from src to v through u is smaller
-                    // than current value of dist[v]
-                    if (!sptSet[v] && graph[u, v] != 0 &&
-                         dist[u] != int.MaxValue && dist[u] + graph[u, v] < dist[v])
-                        dist[v] = dist[u] + graph[u, v];
+                int u = minDistance(dist, visitado, grafo, count);
+                visitado[u] = true;
+                // Console.WriteLine(u);
+                if(u!= 6){
+                    foreach(int v in grafo.neighbors[u]){
+                        if (!visitado[v] && grafo.weight[u][v] != 0 && dist[u] != double.MaxValue && dist[u] + grafo.weight[u][v] < dist[v]){
+                            // Console.WriteLine("esse e o V:  " + v + "Esse e o U: " + u); 
+                            dist[v] = dist[u] + grafo.weight[u][v];
+                            if(v == destino.numero){
+                                caminho.Add(u);
+                            }
+                        }
+                    }
+                }
             }
 
-            // print the constructed distance array
-            printSolution(dist, V);
+            printSolution(dist, grafo, caminho, src, destino);
         }
     }
 }

@@ -44,14 +44,7 @@ namespace test
 
                 foreach (Player item in team)
                 {
-                    if ((item.numero != 6) && (jogador.numero != item.numero))
-                    {
-                        viz.Add(item.numero);
-                    }
-                    else if ((jogador.numero == 1) && (item.numero == 6))
-                    {
-                        viz.Add(item.numero);
-                    }
+                    viz.Add(item.numero);
                 }
                 return viz;
             }
@@ -62,11 +55,15 @@ namespace test
 
                 foreach (Player item in team)
                 {
-                    if ((item.numero != 6) && (jogador.numero != item.numero))
+                    if ((jogador.numero == 1) && (item.numero == 6))
                     {
                         weight.Add(distance(jogador,item));
                     }
-                    else if ((jogador.numero == 1) && (item.numero == 6))
+                    else if(item.numero == jogador.numero || item.numero == 6 || jogador.numero == 6)
+                    {
+                        weight.Add(0);
+                    }
+                    else
                     {
                         weight.Add(distance(jogador,item));
                     }
@@ -80,7 +77,7 @@ namespace test
             List<int> viz3 = neighbors(jogador3, team);
             List<int> viz4 = neighbors(jogador4, team);
             List<int> viz5 = neighbors(jogador5, team);
-            List<int> viz6 = new List<int>();
+            List<int> viz6 = neighbors(final, team);
 
             List<double> weight1= weight(jogador, team);
             List<double> weight2 = weight(jogador1, team);
@@ -88,7 +85,7 @@ namespace test
             List<double> weight4 = weight(jogador3, team);
             List<double> weight5 = weight(jogador4, team);
             List<double> weight6 = weight(jogador5, team);
-            List<double> weight7 = new List<double>();
+            List<double> weight7 = weight(final,team);
 
             grafo.AddNode(jogador, viz, weight1);
             grafo.AddNode(jogador1, viz1,weight2);
@@ -99,12 +96,14 @@ namespace test
             grafo.AddNode(final, viz6,weight7);
 
 
+            // grafo.ShowNeighbors(grafo);
             // grafo.ShowWeight(grafo);
+            
+            // Console.WriteLine(grafo.weight[3][3]);
 
             Dijkstra dij = new Dijkstra();
-            
-            dij.dijkstra(grafo,jogador3);
 
+            dij.dijkstra(grafo,jogador3, final);
 
 
 
