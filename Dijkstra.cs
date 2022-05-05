@@ -28,12 +28,14 @@ namespace test
             }
 
             Console.WriteLine("Caminho: ");
-            Console.Write(src.numero);
+            Console.Write("(" + src.position[0] + ", " + src.position[1] + ") ");
             foreach(var v in caminho)
             {
-                Console.Write( " " + v);
+                //Console.Write( " " + v);
+                //Console.Write(" " +grafo.allNodesData[v].position[1]);
+                Console.Write("(" + grafo.allNodesData[v].position[0] + ", " + grafo.allNodesData[v].position[1] + ") ");
             }
-            Console.Write(" " + destino.numero);
+            Console.Write("(" + destino.position[0] + ", " + destino.position[1] + ") ");
 
         }
         public void dijkstra(Graph grafo, Player src, Player destino)
