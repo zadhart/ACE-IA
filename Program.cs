@@ -38,10 +38,6 @@ namespace test
                 listaJogadores.Add( new Player(PosJogador[i].Item1, PosJogador[i].Item2, nomes[i], i));
             }
 
-            foreach (var ind in listaJogadores){
-                Console.WriteLine(ind.nome);
-            }
-
             static double distance(Player jogador, Player item)
             {
                 // a2 = b2 + c2
@@ -100,26 +96,7 @@ namespace test
 
             Dijkstra dij = new Dijkstra();
 
-            dij.dijkstra(grafo, listaJogadores[0],listaJogadores[6] );
-
-
-
-            // for (int i = 0; i < grafo.allNodesData.Count; i++)
-            // {
-            //     int z = grafo.allNodesData[i].position[0];
-            //     int w = grafo.allNodesData[i].position[1];
-
-            //     matrix[z, w] = 1;
-            // }
-
-            // for (int x = 0; x < linha; x++)
-            // {
-            //     for (int y = 0; y < coluna; y++)
-            //     {
-            //         Console.Write(matrix[x, y]);
-            //     }
-            //     Console.WriteLine("");
-            // }
+            dij.dijkstra(grafo, listaJogadores[0], listaJogadores[6]);
         }
     }
 }
