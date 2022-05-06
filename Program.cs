@@ -1,6 +1,7 @@
 ﻿using static test.Player;
 using static test.Graph;
 using static test.Dijkstra;
+using System.Collections.Generic;
 
 namespace test
 {
@@ -12,27 +13,37 @@ namespace test
             int linha = 25;
             int[,] matrix = new int[linha, coluna];
 
+            string[] jogadores = {"Jogador","Jogador1","Jogador2","Jogador3","Jogador4","Jogador5","Jogador6", "Final"};
+
+            string[] nomes = {"Jeremias","Josue","Moises","Rafael","ChrisTiroCerto","SucoDeFruta","Gol"};
+
             List<Player> team = new List<Player>();
 
             Graph grafo = new Graph();
+            
+            var PosJogador = new List<(int, int)>
+            {
+                (15,40),
+                ( 20,30), 
+                ( 10,10), 
+                ( 0,0 ), 
+                ( 13,17), 
+                ( 24,24), 
+                ( 24,49)
+            };
 
-            Player jogador = new Player(15, 40, "Jeremias", 0);
-            Player jogador1 = new Player(20, 30, "Josue", 1);
-            Player jogador2 = new Player(10, 10, "Moises", 2);
-            Player jogador3 = new Player(0, 0, "Rafael", 3);
-            Player jogador4 = new Player(13, 17, "ChrisTiroCerto", 4);
-            Player jogador5 = new Player(24, 24, "SucoFruta", 5);
-            Player final = new Player(25, 50, "Gol", 6);
+            var listaJogadores = new List<Player>();
 
-            team.Add(jogador);
-            team.Add(jogador1);
-            team.Add(jogador2);
-            team.Add(jogador3);
-            team.Add(jogador4);
-            team.Add(jogador5);
-            team.Add(final);
+            for(int i = 0; i < 7; i++){
+                listaJogadores.Add( new Player(PosJogador[i].Item1, PosJogador[i].Item2, nomes[i], i));
+            }
 
-            static double distance(Player jogador, Player item){
+            foreach (var ind in listaJogadores){
+                Console.WriteLine(ind.nome);
+            }
+
+            static double distance(Player jogador, Player item)
+            {
                 // a2 = b2 + c2
                 var dist = Math.Sqrt((Math.Pow(jogador.position[0] - item.position[0], 2) + Math.Pow(jogador.position[1] - item.position[1], 2)));
                 return dist;
@@ -57,66 +68,55 @@ namespace test
                 {
                     if ((jogador.numero == 1) && (item.numero == 6))
                     {
-                        weight.Add(distance(jogador,item));
+                        weight.Add(distance(jogador, item));
                     }
-                    else if(item.numero == jogador.numero || item.numero == 6 || jogador.numero == 6)
+                    else if (item.numero == jogador.numero || item.numero == 6 || jogador.numero == 6)
                     {
                         weight.Add(0);
                     }
                     else
                     {
-                        weight.Add(distance(jogador,item));
+                        weight.Add(distance(jogador, item));
                     }
                 }
                 return weight;
             }
 
-            List<int> viz = neighbors(jogador, team);
-            List<int> viz1 = neighbors(jogador1, team);
-            List<int> viz2 = neighbors(jogador2, team);
-            List<int> viz3 = neighbors(jogador3, team);
-            List<int> viz4 = neighbors(jogador4, team);
-            List<int> viz5 = neighbors(jogador5, team);
-            List<int> viz6 = neighbors(final, team);
+            List<List<int>> Viz = new List<List<int>>{};
 
-            List<double> weight1= weight(jogador, team);
-            List<double> weight2 = weight(jogador1, team);
-            List<double> weight3 = weight(jogador2, team);
-            List<double> weight4 = weight(jogador3, team);
-            List<double> weight5 = weight(jogador4, team);
-            List<double> weight6 = weight(jogador5, team);
-            List<double> weight7 = weight(final,team);
+            foreach (var ind in listaJogadores){
+                Viz.Add(neighbors (ind,listaJogadores));
+            }
 
-            grafo.AddNode(jogador, viz, weight1);
-            grafo.AddNode(jogador1, viz1,weight2);
-            grafo.AddNode(jogador2, viz2,weight3);
-            grafo.AddNode(jogador3, viz3,weight4);
-            grafo.AddNode(jogador4, viz4,weight5);
-            grafo.AddNode(jogador5, viz5,weight6);
-            grafo.AddNode(final, viz6,weight7);
+            List<List<double>> ListaWeight = new List<List<double>>{};
 
+            foreach (var ind in listaJogadores){
+                ListaWeight.Add(weight(ind,listaJogadores));
+            }
 
-            // grafo.ShowNeighbors(grafo);
-            // grafo.ShowWeight(grafo);
-            
-            // Console.WriteLine(grafo.weight[3][3]);
+            for(int n = 0; n <7; n++){
+                grafo.AddNode(listaJogadores[n],Viz[n],ListaWeight[n]);
+            }
 
             Dijkstra dij = new Dijkstra();
 
-            dij.dijkstra(grafo,jogador3, final);
+            dij.dijkstra(grafo, listaJogadores[0],listaJogadores[6] );
 
 
 
-            // for(int i = 0; i < grafo.allNodesData.Count; i++){
+            // for (int i = 0; i < grafo.allNodesData.Count; i++)
+            // {
             //     int z = grafo.allNodesData[i].position[0];
             //     int w = grafo.allNodesData[i].position[1];
 
             //     matrix[z, w] = 1;
             // }
 
-            // for(int x = 0; x < linha; x++){
-            //     for(int y = 0; y < coluna; y++){
-            //         Console.Write(matrix[x,y]);
+            // for (int x = 0; x < linha; x++)
+            // {
+            //     for (int y = 0; y < coluna; y++)
+            //     {
+            //         Console.Write(matrix[x, y]);
             //     }
             //     Console.WriteLine("");
             // }
